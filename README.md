@@ -197,3 +197,88 @@ ex:
                         //registrar o erro de alguma forma.
                 }
         ?>
+
+
+## PDOStatement Object (Query) com fetchAll
+
+documentação: https://www.php.net/manual/en/pdo.query.php
+
+
+![Alt text](pdostatement.png)
+
+- ideal para query de consultas como o **SELECT**
+- retorna os dados da consulta
+
+O metodo query retorna um PDOStatement:
+
+        $stmt = $conexao->query($query);
+
+A variavel stmt apenas contem a declaração da consulta:
+
+        PDOStatement Object ( [queryString] => select * from tb_usuarios )
+
+A partir da variavel **$stmt** podemo executar metodos para ter acesso aos dados recuperados do banco de dados
+
+O metodo **fetchAll()** retorna todos os registros recuperados da consulta:
+
+        $lista = $stmt->fetchAll();
+
+
+Imprimindo a variavel lista tera um array com todo o resultado da consulta:
+
+        echo '<pre>';
+            print_r($lista);
+        echo '</pre>';
+
+
+- Um detalhe importante é que as informações são retornados de dois modos diferentes 
+- Utilizando índices associativos que recebem os nomes das colunas.
+- Esses índices associativos portanto nada mais são do que os nomes das colunas da tabela da qual fizemos a consulta.
+
+- Mas é possível também recuperar esses valores utilizando índices numéricos.
+
+        Array
+        (
+        [0] => Array
+                (
+                [id] => 6
+                [0] => 6
+                [nome] => Vitor Gesteira
+                [1] => Vitor Gesteira
+                [email] => vitor@teste.com.br
+                [2] => vitor@teste.com.br
+                [senha] => 123456
+                [3] => 123456
+                )
+
+        [1] => Array
+                (
+                [id] => 7
+                [0] => 7
+                [nome] => carlos Almeida
+                [1] => carlos Almeida
+                [email] => carlos@teste.com.br
+                [2] => carlos@teste.com.br
+                [senha] => 123456
+                [3] => 123456
+                )
+
+        [2] => Array
+                (
+                [id] => 8
+                [0] => 8
+                [nome] => Bianca da Silva
+                [1] => Bianca da Silva
+                [email] => bianca@teste.com.br
+                [2] => bianca@teste.com.br
+                [senha] => 123456
+                [3] => 123456
+                )
+
+        )
+
+Nós podemos tranquilamente acessar os índices desejados. Da mesma forma que consultamos o array:
+
+        echo $lista[2]['email'];
+        echo $lista[0][1];
+
