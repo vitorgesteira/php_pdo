@@ -149,9 +149,7 @@ Primeiro precisamos montar a query que queremos executar:
 
 Agora, apartir do objeto criado como conexão, utiliza a função **exec** passando a query criada como parametro:
 
-        $retorno = $conexao->exec($query);
-        
-        //retorno 0, pois nao estamos modificando registros
+        $retorno = $conexao->exec($query); //retorno 0, pois nao estamos modificando registros
 
 ex:
 
