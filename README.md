@@ -66,8 +66,9 @@ Neste exemplo temos um erro proposital no dsn:
                 }
         ?>
 
-- Esse erro gera este objeto contendo atributos protegidos.
-- Os metodos podem ser conferidos na documentação.
+Esse erro gera este objeto contendo atributos protegidos.
+
+Os metodos podem ser conferidos na documentação.
 
         PDOException Object
         (
@@ -128,3 +129,73 @@ No php voce trata esse erro:
                 }
         ?>
 
+## Executando instruções SQL(Exec)
+
+- metodo **exec()**
+- **PDO::exec** — Executa uma instrução SQL e retorna o número de linhas afetadas
+- **PDO::exec()** retorna o número de linhas que foram modificadas ou excluídas pela instrução SQL que você emitiu. Se nenhuma linha for afetada, **PDO::exec()** retorna 0.
+- Instruções de **DDL** sempre retorna **0**, pois não esta modificando dados
+
+Primeiro precisamos montar a query que queremos executar:
+
+        $query = '
+                create table if not exists tb_usuarios(
+                        id int not null primary key auto_increment,
+                        nome varchar (50) not null,
+                        email varchar(100) not null,
+                        senha varchar(32) not null
+                )
+        ';
+
+Agora, apartir do objeto criado como conexão, utiliza a função **exec** passando a query criada como parametro:
+
+        $retorno = $conexao->exec($query);
+        
+        //retorno 0, pois nao estamos modificando registros
+
+ex:
+
+        <?php
+                $dsn = 'mysql:host=localhost;dbname=php_pdo';
+                $usuario = 'root';
+                $senha = '';
+
+                try{
+                        $conexao = new PDO($dsn, $usuario, $senha);
+
+                        $query = '
+                        CREATE TABLE if not exists tb_usuarios(
+                                id int not null primary key auto_increment,
+                                nome varchar (50) not null,
+                                email varchar(100) not null,
+                                senha varchar(32) not null
+                        );
+                        ';
+
+                        $retorno = $conexao->exec($query);
+                        echo $retorno;
+
+                        // $query = '
+                        //         insert into tb_usuarios(
+                        //             nome, email, senha 
+                        //         ) values (
+                        //             "Jorge Sant Ana", "jorge@teste.com.br", "123456"
+                        //         )
+                        // ';
+
+                        $query = '
+                                delete from tb_usuarios
+                        ';
+
+                        $retorno = $conexao->exec($query);
+                        echo $retorno;
+
+                }catch(PDOException $e){
+                        // echo '<pre>';
+                        //     print_r($e);
+                        // echo '</pre>';
+
+                        echo 'Erro: '. $e->getCode(). ' Mensagem: '. $e->getMessage();
+                        //registrar o erro de alguma forma.
+                }
+        ?>
