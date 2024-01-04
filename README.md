@@ -526,3 +526,81 @@ Nós podemos tranquilamente acessar os índices desejados. Da mesma forma que co
         }
 
 
+## Listando registros com Foreach
+
+- Listar registros utilizando foreach é uma prática comum em PHP quando você está trabalhando com conjuntos de resultados, como os obtidos a partir de consultas em bancos de dados.
+
+- Esse código PHP realiza uma consulta à tabela `tb_usuarios` em um banco de dados usando PDO (PHP Data Objects), recupera os resultados e, em seguida, itera sobre esses resultados para imprimir o valor da coluna `nome` de cada registro.
+
+- Aqui está uma explicação passo a passo do código:
+
+**1. Definição da Consulta SQL:**
+
+        $query = '
+                select * from tb_usuarios 
+        ';
+* Define uma consulta SQL para selecionar todos os campos (`*`) da tabela `tb_usuarios`
+
+**2. Execução da Consulta:** 
+
+        $stmt = $conexao->query($query); //PDO Statemet
+
+   * Utiliza o método `query` do objeto PDO (`$conexao`) para executar a consulta SQL. O resultado é armazenado em um objeto `PDOStatement` chamado `$stmt`.
+
+**3. Recuperação dos Resultados:**
+
+        $lista_usuario = $stmt->fetchAll(PDO::FETCH_ASSOC); //retornará arrays
+
+   * Utiliza o método `fetchAll` para recuperar todos os resultados da consulta como um array associativo (`PDO::FETCH_ASSOC`). Isso significa que cada linha do resultado será representada como um array associativo, onde as chaves são os nomes das colunas e os valores são os dados.
+
+ **4. Iteração sobre os Resultados com `foreach`:**
+
+        foreach($lista_usuario as $key => $value) {
+            // print_r($value);
+            echo $value['nome'];
+            echo '<hr/>';
+        }
+        
+        * Utiliza um loop `foreach` para iterar sobre o array `$lista_usuario`, onde cada elemento é um array associativo representando um registro da tabela
+
+* `echo $value['nome'];` mprime o valor da coluna 'nome' para cada registro.
+
+* `echo '<hr/>';` imprime uma linha horizontal para separar visualmente os resultados.
+
+Ao final do processo, o código imprimirá os nomes dos usuários da tabela `tb_usuarios` com uma linha horizontal entre cada nome. É uma maneira comum de recuperar e exibir dados de um banco de dados usando PHP e PDO.
+
+        Vitor Gesteira
+        carlos Almeida
+        Bianca da Silva
+
+
+**Ou o codigo tambem pode ser feita dessa forma:**
+
+**1. Definição da Consulta SQL:**
+
+        $query = '
+            select * from tb_usuarios 
+        ';
+
+  * Define uma string contendo uma consulta SQL que seleciona todos os campos (`*`) da tabela `tb_usuarios`.
+
+**2. Execução da Consulta e Iteração sobre os Resultados com `foreach`:**
+
+        foreach($conexao->query($query) as $chave => $valor){
+            print_r($valor['nome']);
+            echo '<hr>';
+        }
+
+  * Utiliza o método `query` do objeto PDO (`$conexao`) para executar a consulta SQL e retorna um conjunto de resultados.
+
+  * O `foreach` é usado para iterar sobre esses resultados.
+
+  * Cada iteração de `foreach` representa uma linha do resultado.
+
+  * `$valor` é um array associativo representando os dados de uma linha, onde as chaves são os nomes das colunas e os valores são os dados.
+
+  * `print_r($valor['nome']);` imprime o valor da coluna 'nome' para cada registro.
+
+  * `echo '<hr>';` imprime uma linha horizontal (`<hr>`) para separar visualmente os resultados na saída.
+
+- Em resumo, este código realiza uma consulta à tabela tb_usuarios, obtém os resultados e os exibe na tela, imprimindo os nomes dos usuários com uma linha horizontal entre cada nome. Essa abordagem é eficaz para iteração direta sobre o resultado sem a necessidade de armazenar todos os registros em uma variável antes de processá-los.

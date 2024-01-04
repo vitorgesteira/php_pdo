@@ -32,6 +32,7 @@
         //             "Bianca da Silva", "bianca@teste.com.br", "123456"
         //         )
         // ';
+        // $retorno = $conexao->exec($query);
 
         // $query = '
         //     select * from tb_usuarios
@@ -55,35 +56,66 @@
         // echo $lista[1]->nome;
         
         //fetch
-        $query = '
-            select * from tb_usuarios order by nome desc limit 1
-        ';
-        $stmt = $conexao->query($query); //PDO Statement 
+        // $query = '
+        //     select * from tb_usuarios order by nome desc limit 1
+        // ';
+        // $stmt = $conexao->query($query); //PDO Statement 
 
         // $usuario = $stmt->fetch(PDO::FETCH_OBJ); //retorno objeto
         // $usuario = $stmt->fetch(PDO::FETCH_NUM); //retorno numerico
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC); //retorno associativo
+        // $usuario = $stmt->fetch(PDO::FETCH_ASSOC); //retorno associativo
         
-        echo '<pre>';
-            print_r($usuario);
-        echo '</pre>';
+        // echo '<pre>';
+        //     print_r($usuario);
+        // echo '</pre>';
 
         // echo $usuario->nome; //para acessar o que vem o BD -  objetos
         // echo $usuario[2];
         // echo $usuario['nome'];
 
-        while ($usuario !== false) {
-                echo "Nome: " . $usuario['nome'] . " - Email: " . $usuario['email'] . " - Senha: " . $usuario['senha'] . "<br>";
-                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-        }
+        // while ($usuario !== false) {
+        //         echo "Nome: " . $usuario['nome'] . " - Email: " . $usuario['email'] . " - Senha: " . $usuario['senha'] . "<br>";
+        //         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        // }
+
+        //Listando registros com Foreach
+
+        // $query = '
+        //     select * from tb_usuarios 
+        // ';
+
+        // $stmt = $conexao->query($query); //PDO Statemet
+
+        // $lista_usuario = $stmt->fetchAll(PDO::FETCH_ASSOC); //retornará arrays
+
+        // // echo '<pre>';
+        // //  print_r($lista_usuario);
+        // // echo '</pre>';
 
         
-    }catch(PDOException $e){
-        // echo '<pre>';
-        //     print_r($e);
-        // echo '</pre>';
+        // foreach($lista_usuario as $key => $value) {
+        //     // print_r($value);
+        //     echo $value['nome'];
+        //     echo '<hr/>';
+        // }
 
-        echo 'Erro: '. $e->getCode(). ' Mensagem: '. $e->getMessage();
-        //registrar o erro de alguma forma.
-    }
+        // ou desta forma
+
+        $query = '
+            select * from tb_usuarios 
+        ';
+
+        foreach($conexao->query($query) as $chave => $valor){
+            print_r($valor['nome']);
+            echo '<hr>';
+        }
+        
+        }catch(PDOException $e){
+            // echo '<pre>';
+            //     print_r($e);
+            // echo '</pre>';
+
+            echo 'Erro: '. $e->getCode(). ' Mensagem: '. $e->getMessage();
+            //registrar o erro de alguma forma.
+        }
 ?>
