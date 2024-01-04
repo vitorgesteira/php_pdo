@@ -19,6 +19,13 @@
         // echo $retorno;
 
         // $query = '
+        //     delete from tb_usuarios
+        // ';
+
+        // $retorno = $conexao->exec($query);
+        // echo $retorno;
+
+        // $query = '
         //         insert into tb_usuarios(
         //             nome, email, senha 
         //         ) values (
@@ -26,11 +33,11 @@
         //         )
         // ';
 
-        $query = '
-            select * from tb_usuarios
-        ';
+        // $query = '
+        //     select * from tb_usuarios
+        // ';
         
-        $stmt = $conexao->query($query); //PDO Statement
+        // $stmt = $conexao->query($query); //PDO Statement
         // print_r($stmt);
 
         // $lista = $stmt->fetchAll(PDO::FETCH_ASSOC); //retorno associativo
@@ -39,21 +46,38 @@
         // $lista = $stmt->fetchAll();//retorno associativo e numérico
         // $lista = $stmt->fetchAll(PDO::FETCH_OBJ); //retorna objetos
         
-        echo '<pre>';
-            print_r($lista);
-        echo '</pre>';
+        // echo '<pre>';
+        //     print_r($lista);
+        // echo '</pre>';
 
         // echo $lista[2]['email'];
         // echo $lista[2][2];
         // echo $lista[1]->nome;
+        
+        //fetch
+        $query = '
+            select * from tb_usuarios order by nome desc limit 1
+        ';
+        $stmt = $conexao->query($query); //PDO Statement 
 
-        // $query = '
-        //     delete from tb_usuarios
-        // ';
+        // $usuario = $stmt->fetch(PDO::FETCH_OBJ); //retorno objeto
+        // $usuario = $stmt->fetch(PDO::FETCH_NUM); //retorno numerico
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC); //retorno associativo
+        
+        echo '<pre>';
+            print_r($usuario);
+        echo '</pre>';
 
-        // $retorno = $conexao->exec($query);
-        // echo $retorno;
+        // echo $usuario->nome; //para acessar o que vem o BD -  objetos
+        // echo $usuario[2];
+        // echo $usuario['nome'];
 
+        while ($usuario !== false) {
+                echo "Nome: " . $usuario['nome'] . " - Email: " . $usuario['email'] . " - Senha: " . $usuario['senha'] . "<br>";
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        
     }catch(PDOException $e){
         // echo '<pre>';
         //     print_r($e);

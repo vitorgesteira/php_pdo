@@ -457,3 +457,72 @@ Nós podemos tranquilamente acessar os índices desejados. Da mesma forma que co
         )
 
 - Lembre-se de que a escolha entre esses estilos depende da estrutura dos dados que você espera e das necessidades específicas do seu código. Certifique-se de consultar a documentação oficial do PHP para obter informações detalhadas sobre cada estilo:
+
+
+## Fetch - Retornando apenas um registro
+
+- Se você deseja retornar apenas um registro utilizando o método fetch no PDO, você pode fazer isso de várias maneiras. Aqui estão algumas opções:
+
+  * Fetch Associativo:
+
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC); 
+
+        echo $usuario['nome'];
+
+  * retorno:
+
+        Array
+        (
+                [id] => 6
+                [nome] => Vitor Gesteira
+                [email] => vitor@teste.com.br
+                [senha] => 123456
+        )
+
+        Vitor Gesteira
+
+  * Fetch Numérico:
+
+        $usuario = $stmt->fetch(PDO::FETCH_NUM);
+
+        echo $usuario[2];
+
+  * retorno:
+
+        Array
+        (
+                [0] => 6
+                [1] => Vitor Gesteira
+                [2] => vitor@teste.com.br
+                [3] => 123456
+        )
+
+        vitor@teste.com.br
+
+  * Fetch como Objeto:
+
+        $usuario = $stmt->fetch(PDO::FETCH_OBJ);
+
+        echo $usuario->nome;
+
+  * retorno:
+
+        stdClass Object
+        (
+                [id] => 6
+                [nome] => Vitor Gesteira
+                [email] => vitor@teste.com.br
+                [senha] => 123456
+        )
+
+        Vitor Gesteira
+
+- Lembre-se de que o método fetch retorna a próxima linha do conjunto de resultados como especificado pelo estilo que você fornece como argumento. Uma vez que você tenha obtido um registro, não será mais possível acessar registros subsequentes diretamente usando fetch. Se você deseja iterar por todos os registros, pode usar um loop como demonstrado assegir.
+
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        while ($usuario !== false) {
+                echo "Nome: " . $usuario['nome'] . " - Email: " . $usuario['email'] . " - Senha: " . $usuario['senha'] . "<br>";
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+
