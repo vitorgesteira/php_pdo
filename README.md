@@ -2,15 +2,38 @@
 
 documentação: https://www.php.net/manual/en/book.pdo.php
 
-PHP Data Objects:
+### PHP Data Objects:
 
-    Conjuntos de objetos que auxilia no trabalho com banco de dados.
+- O PHP Data Objects é uma extensão que permite ao PHP se comunicar com diversos tipos de bancos de dados.
 
-Para que serve o PDO?
+- O recurso fornece um meio abstrato para acesso às informações disponibilizadas pelos bancos, sendo os seus métodos independentes para cada um dos tipos suportados
 
-    Prover uma padronização da forma com que o php se comunica com bancos de dados. Os objetos são agregados no php em formato de extenção. Os objetos pode ser habilitado ou desabilitados atravez do arquivo php ini
+- O PDO é orientado a objetos.
 
-Qual a vantagem de se trabalhar com PDO?
+### Para que serve o PDO?
+
+- Sua principal finalidade é oferecer uma interface consistente e segura para interagir com bancos de dados, independentemente do sistema de gerenciamento de banco de dados (SGBD) subjacente.
+
+- Prover uma padronização da forma com que o php se comunica com bancos de dados. 
+- Os objetos são agregados no php em formato de extenção. 
+- Os objetos pode ser habilitado ou desabilitados atravez do arquivo php ini
+
+### Qual a vantagem de se trabalhar com PDO?
+
+- **Abstração de Banco de Dados:** 
+  * O PDO fornece uma camada de abstração que permite que os desenvolvedores escrevam código que seja independente do banco de dados específico. Isso facilita a migração de um sistema para outro, pois você pode trocar o SGBD subjacente sem precisar modificar significativamente o código.
+
+- **Segurança:** 
+  * O PDO utiliza declarações preparadas e vinculação de parâmetros, o que ajuda a prevenir ataques de injeção de SQL. Esse é um aspecto crítico para garantir a segurança das aplicações web, evitando que dados não confiáveis causem danos ao banco de dados.
+
+- **Suporte a Transações:** 
+  * O PDO oferece suporte a transações, permitindo que você execute várias consultas como uma única unidade atômica. Isso é útil em operações que exigem consistência no banco de dados, como transferências de fundos em um sistema bancário.
+
+- **Suporte a Diferentes Bancos de Dados:** 
+  * Com o PDO, é possível conectar-se a vários tipos de bancos de dados, como MySQL, PostgreSQL, SQLite, Microsoft SQL Server, entre outros. Isso proporciona flexibilidade no desenvolvimento de aplicativos que podem precisar interagir com diferentes sistemas de gerenciamento de banco de dados.
+
+- **Gerenciamento de Erros:** 
+  * O PDO oferece recursos avançados para gerenciamento de erros, permitindo que os desenvolvedores capturem e lidem com exceções de maneira mais eficaz, facilitando a depuração e a manutenção do código.
 
 
 ![Alt text](<introducao.png>)
@@ -282,3 +305,155 @@ Nós podemos tranquilamente acessar os índices desejados. Da mesma forma que co
         echo $lista[2]['email'];
         echo $lista[0][1];
 
+
+## Fetchall - Tipos de retornos
+
+- Ao utilizar o método fetchAll do PDO para recuperar todos os resultados de uma consulta, você também pode especificar diferentes estilos para o array resultante.
+
+- Aqui estão alguns dos tipos comuns de fetchAll:
+
+  * `PDO::FETCH_ASSOC`: Retorna um array de arrays associativos, onde cada elemento representa uma linha da consulta, indexada pelo nome da coluna.
+
+        $lista = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  * retorno:
+
+        Array
+        (
+                [0] => Array
+                (
+                        [id] => 6
+                        [nome] => Vitor Gesteira
+                        [email] => vitor@teste.com.br
+                        [senha] => 123456
+                )
+
+                [1] => Array
+                (
+                        [id] => 7
+                        [nome] => carlos Almeida
+                        [email] => carlos@teste.com.br
+                        [senha] => 123456
+                )
+
+                [2] => Array
+                (
+                        [id] => 8
+                        [nome] => Bianca da Silva
+                        [email] => bianca@teste.com.br
+                        [senha] => 123456
+                )
+        )
+
+  * `PDO::FETCH_NUM`: Retorna um array de arrays indexados numericamente, onde cada elemento representa uma linha da consulta.
+
+        $lista = $stmt->fetchAll(PDO::FETCH_NUM);
+
+  * retorno:
+
+        Array
+        (
+                [0] => Array
+                (
+                        [0] => 6
+                        [1] => Vitor Gesteira
+                        [2] => vitor@teste.com.br
+                        [3] => 123456
+                )
+
+                [1] => Array
+                (
+                        [0] => 7
+                        [1] => carlos Almeida
+                        [2] => carlos@teste.com.br
+                        [3] => 123456
+                )
+
+                [2] => Array
+                (
+                        [0] => 8
+                        [1] => Bianca da Silva
+                        [2] => bianca@teste.com.br
+                        [3] => 123456
+                )
+        )
+
+  * `PDO::FETCH_BOTH`: Retorna um array de arrays indexados tanto pelo nome quanto pelo índice numérico.
+
+        $lista = $stmt->fetchAll(PDO::FETCH_BOTH);
+
+  * retorno:
+
+        Array
+        (
+                [0] => Array
+                (
+                        [id] => 6
+                        [0] => 6
+                        [nome] => Vitor Gesteira
+                        [1] => Vitor Gesteira
+                        [email] => vitor@teste.com.br
+                        [2] => vitor@teste.com.br
+                        [senha] => 123456
+                        [3] => 123456
+                )
+
+                [1] => Array
+                (
+                        [id] => 7
+                        [0] => 7
+                        [nome] => carlos Almeida
+                        [1] => carlos Almeida
+                        [email] => carlos@teste.com.br
+                        [2] => carlos@teste.com.br
+                        [senha] => 123456
+                        [3] => 123456
+                )
+
+                [2] => Array
+                (
+                        [id] => 8
+                        [0] => 8
+                        [nome] => Bianca da Silva
+                        [1] => Bianca da Silva
+                        [email] => bianca@teste.com.br
+                        [2] => bianca@teste.com.br
+                        [senha] => 123456
+                        [3] => 123456
+                )
+        )
+
+  * `PDO::FETCH_OBJ`: Retorna um array de objetos anônimos, onde cada objeto tem propriedades que correspondem aos nomes das colunas.
+
+        $lista = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+  * retorno:
+
+        Array
+        (
+                [0] => stdClass Object
+                (
+                        [id] => 6
+                        [nome] => Vitor Gesteira
+                        [email] => vitor@teste.com.br
+                        [senha] => 123456
+                )
+
+                [1] => stdClass Object
+                (
+                        [id] => 7
+                        [nome] => carlos Almeida
+                        [email] => carlos@teste.com.br
+                        [senha] => 123456
+                )
+
+                [2] => stdClass Object
+                (
+                        [id] => 8
+                        [nome] => Bianca da Silva
+                        [email] => bianca@teste.com.br
+                        [senha] => 123456
+                )
+        )
+
+- Lembre-se de que a escolha entre esses estilos depende da estrutura dos dados que você espera e das necessidades específicas do seu código. Certifique-se de consultar a documentação oficial do PHP para obter informações detalhadas sobre cada estilo:

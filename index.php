@@ -31,13 +31,21 @@
         ';
         
         $stmt = $conexao->query($query); //PDO Statement
-        $lista = $stmt->fetchAll();
         // print_r($stmt);
+
+        // $lista = $stmt->fetchAll(PDO::FETCH_ASSOC); //retorno associativo
+        // $lista = $stmt->fetchAll(PDO::FETCH_NUM); //retorno numérico 
+        // $lista = $stmt->fetchAll(PDO::FETCH_BOTH); //retorno associativo e numérico 
+        // $lista = $stmt->fetchAll();//retorno associativo e numérico
+        // $lista = $stmt->fetchAll(PDO::FETCH_OBJ); //retorna objetos
+        
         echo '<pre>';
             print_r($lista);
         echo '</pre>';
 
-        echo $lista[2]['email'];
+        // echo $lista[2]['email'];
+        // echo $lista[2][2];
+        // echo $lista[1]->nome;
 
         // $query = '
         //     delete from tb_usuarios
