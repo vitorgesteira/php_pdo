@@ -561,7 +561,7 @@ Nós podemos tranquilamente acessar os índices desejados. Da mesma forma que co
             echo '<hr/>';
         }
         
-        * Utiliza um loop `foreach` para iterar sobre o array `$lista_usuario`, onde cada elemento é um array associativo representando um registro da tabela
+* Utiliza um loop `foreach` para iterar sobre o array `$lista_usuario`, onde cada elemento é um array associativo representando um registro da tabela
 
 * `echo $value['nome'];` mprime o valor da coluna 'nome' para cada registro.
 
@@ -604,3 +604,78 @@ Ao final do processo, o código imprimirá os nomes dos usuários da tabela `tb_
   * `echo '<hr>';` imprime uma linha horizontal (`<hr>`) para separar visualmente os resultados na saída.
 
 - Em resumo, este código realiza uma consulta à tabela tb_usuarios, obtém os resultados e os exibe na tela, imprimindo os nomes dos usuários com uma linha horizontal entre cada nome. Essa abordagem é eficaz para iteração direta sobre o resultado sem a necessidade de armazenar todos os registros em uma variável antes de processá-los.
+
+## SQL Injection
+
+- A injeção de SQL é uma vulnerabilidade de segurança que ocorre quando um aplicativo web permite que um invasor insira código SQL não desejado em uma consulta.
+- Para evitar a injeção de SQL ao usar o PDO em PHP, é crucial usar declarações preparadas e parâmetros vinculados.
+
+![Alt text](sql_injection.png)
+
+- Este código PHP está vulnerável a ataques de injeção de SQL, o que pode comprometer a segurança do sistema. 
+
+        <?php   
+        // print_r($_POST);
+        if(!empty($_POST['usuario']) && !empty($_POST['senha'])){
+                $dsn = 'mysql:host=localhost;dbname=php_pdo';
+                $usuario = 'root';
+                $senha = '';
+
+                try{
+                $conexao = new PDO($dsn, $usuario, $senha);
+
+                //query
+                $query = "select * from tb_usuarios where ";
+                $query .= " email = '{$_POST['usuario']}' ";
+                $query .= " AND senha = '{$_POST['senha']}' ";
+                echo $query;
+
+                $stm = $conexao->query($query);
+                $usuario = $stm->fetch();
+
+                echo "<pre>";
+                // print_r($usuario);   
+                echo "</pre>";
+        
+                }catch(PDOException $e){
+                echo 'Erro: '. $e->getCode(). ' Mensagem: '. $e->getMessage();
+                }
+        }
+        ?>
+
+        <html>
+        <head>
+                <meta charset="utf-8">
+                <title>Login</title>
+        </head>
+        <body>
+        <form method="post" action="sql_injection.php">
+                <input type="text" placeholder="usuário" name="usuario">
+                <br/>
+                <input type="password" placeholder="senha" name="senha">
+                <br/>
+                <button type="submit">Entrar</button>
+        </form>
+        </body>
+        </html>
+
+        //123456'; delete from tb_usuarios where 'a' = 'a
+        //select * from tb_usuarios where email = 'vitor@teste.com.br' AND senha = '123456'; delete from tb_usuarios where 'a' = 'a'
+
+Aqui estão os problemas principais:
+
+**1. Concatenação direta na string SQL:**
+
+        $query .= " email = '{$_POST['usuario']}' ";
+        $query .= " AND senha = '{$_POST['senha']}' ";
+
+  * Aqui, os valores `$_POST['usuario']` e `$_POST['senha']` são diretamente concatenados na string da consulta SQL. 
+
+  * Isso torna a aplicação vulnerável a injeção de SQL, onde um invasor pode manipular os dados de entrada para realizar operações não autorizadas no banco de dados.
+
+**2. Ausência de preparação de consultas:**
+
+  * Não há uso de declarações preparadas (prepared statements) no código para proteger contra injeção de SQL. Utilizar declarações preparadas é uma prática essencial para garantir a segurança ao trabalhar com consultas SQL.
+  * Para corrigir isso, você deve usar declarações preparadas e vincular os parâmetros da consulta. 
+
+
