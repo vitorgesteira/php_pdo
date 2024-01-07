@@ -8,19 +8,39 @@
         try{
             $conexao = new PDO($dsn, $usuario, $senha);
 
-            //query
+            //sql injection
+            // $query = "select * from tb_usuarios where ";
+            // $query .= " email = '{$_POST['usuario']}' ";
+            // $query .= " AND senha = '{$_POST['senha']}' ";
+            // echo $query;
+
+            // $stm = $conexao->query($query);
+            // $usuario = $stm->fetch();
+
+            // echo "<pre>";
+            // // print_r($usuario);   
+            // echo "</pre>";
+
+            //-------------------------//--------------------------
+
+            //Prepare Statment
             $query = "select * from tb_usuarios where ";
-            $query .= " email = '{$_POST['usuario']}' ";
-            $query .= " AND senha = '{$_POST['senha']}' ";
-            echo $query;
+            $query .= " email = :usuario";
+            $query .= " AND senha = :senha ";
 
-            $stm = $conexao->query($query);
-            $usuario = $stm->fetch();
+            $stmt = $conexao->prepare($query);
 
-            echo "<pre>";
-            // print_r($usuario);   
-            echo "</pre>";
-    
+            $stmt->bindValue(':usuario', $_POST['usuario']);
+            $stmt->bindValue(':senha', $_POST['senha'], PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            $usuario = $stmt->fetch();
+
+            echo '<pre>';
+                print_r($usuario);
+            echo '</pre>';
+
         }catch(PDOException $e){
             echo 'Erro: '. $e->getCode(). ' Mensagem: '. $e->getMessage();
         }

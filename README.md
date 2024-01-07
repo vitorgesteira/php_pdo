@@ -659,8 +659,13 @@ Ao final do processo, o código imprimirá os nomes dos usuários da tabela `tb_
         </body>
         </html>
 
-        //123456'; delete from tb_usuarios where 'a' = 'a
-        //select * from tb_usuarios where email = 'vitor@teste.com.br' AND senha = '123456'; delete from tb_usuarios where 'a' = 'a'
+- Se for em inspecionar no navegador e modificar o campo do input password para text e injetar esse texto no campo de senha do front end e enviar:
+
+        1234'; delete from tb_usuarios where 'a' = 'a
+
+- O php vai concatenar na query e executar no banco, assim fazendo a consulta no banco e logo em seguida executando o delete apagando todos os registros:
+
+        select * from tb_usuarios where email = 'vitor@teste.com.br' AND senha = '123456'; delete from tb_usuarios where 'a' = 'a'
 
 Aqui estão os problemas principais:
 
@@ -679,3 +684,79 @@ Aqui estão os problemas principais:
   * Para corrigir isso, você deve usar declarações preparadas e vincular os parâmetros da consulta. 
 
 
+## Prepare Statement
+
+documentação: https://www.php.net/manual/en/pdostatement.bindvalue
+
+documentação: https://www.php.net/manual/en/pdo.constants.php
+
+- O `PDO::prepare()` é um método fundamental da extensão PDO (PHP Data Objects) que é utilizado para criar e preparar consultas SQL antes de serem executadas. 
+- Ele é parte integrante da técnica de "Prepared Statements" em PHP, que é uma abordagem recomendada para executar consultas de maneira segura e eficiente.
+
+![Alt text](prapare_statement.png)
+
+- A sequência típica de uso do `PDO::prepare()` envolve os seguintes passos:
+
+1. **Criação da Consulta SQL com Marcadores de Posição:**
+
+- A consulta SQL é definida com marcadores de posição para os parâmetros. Esses marcadores de posição são representados por dois-pontos seguidos de um identificador único (por exemplo, `:usuario`, `:senha`).
+
+        $query = "select * from tb_usuarios where email = :usuario AND senha = :senha ";
+        
+2. **Preparação da Consulta:**
+
+- A consulta SQL é então passada para o método `PDO::prepare()`, que retorna um objeto `PDOStatement`. 
+- Este objeto representa a consulta preparada e contém informações sobre ela.
+
+        $stmt = $conexao->prepare($query);
+
+3. Associação de Parâmetros:
+
+- Em seguida, os valores dos parâmetros são associados aos marcadores de posição usando métodos como `bindParam()` ou `bindValue()` no objeto `PDOStatement`.
+
+        $stmt->bindValue(':usuario', $_POST['usuario']);
+        $stmt->bindValue(':senha', $_POST['senha'], PDO::PARAM_INT);
+
+        $stmt->bindParam(':usuario', $_POST['usuario']);
+        $stmt->bindParam(':senha', $idade, $_POST['senha']);
+        
+- Note que `bindParam()` e `bindValue()` diferem na forma como lidam com a referência ao valor. 
+- `bindParam()` permite a vinculação por referência, o que significa que o valor da variável é atualizado quando o parâmetro é executado. 
+- `bindValue()` passa o valor atual da variável.
+
+4. **Execução da Consulta:**
+
+- Após a preparação e associação de parâmetros, a consulta preparada pode ser executada usando o método `execute()`.
+
+        $stmt->execute();
+
+- O uso de "Prepared Statements" com o `PDO::prepare()` traz benefícios significativos em termos de segurança e desempenho, ajudando a prevenir a injeção de SQL e permitindo a reutilização eficiente de consultas SQL com diferentes conjuntos de dados.
+
+**obs:** O terceiro parâmetro da função `bindValue()` é opcional e é conhecido como o "tipo de dado" ou "data type." Esse parâmetro permite especificar explicitamente o tipo de dados do valor que está sendo vinculado ao marcador de posição.
+
+O terceiro parâmetro, `$data_type`, aceita um valor opcional que indica o tipo de dados do valor que está sendo vinculado. Alguns dos valores possíveis para `$data_type` incluem:
+
+- `PDO::PARAM_STR`: Indica que o valor é uma string.
+- `PDO::PARAM_INT`: Indica que o valor é um inteiro.
+- `PDO::PARAM_BOOL`: Indica que o valor é um booleano.
+- `PDO::PARAM_NULL`: Indica que o valor é NULL.
+
+Ao especificar o tipo de dados, você está informando ao PDO como deve tratar o valor quando ele for incluído na consulta SQL. Isso pode ser útil para garantir que o valor seja tratado corretamente, especialmente em casos onde a conversão automática de tipos pode não ser suficiente.
+
+Exemplo de uso da função `bindValue()` com o terceiro parâmetro:
+
+        $stmt->bindValue(':senha', $_POST['senha'], PDO::PARAM_INT);
+
+- Neste exemplo, estamos vinculando a variável `$senha` ao marcador de posição `:senha` e indicando que seu tipo é um inteiro (`PDO::PARAM_INT`). Isso garante que o PDO trate o valor como um inteiro ao inseri-lo na consulta preparada.
+
+- É importante observar que, na maioria dos casos, o PDO faz uma boa inferência sobre o tipo de dados automaticamente. No entanto, em situações onde a especificação explícita do tipo de dados é necessária, o uso do terceiro parâmetro da função `bindValue()` pode ser benéfico.
+
+         1234'; delete from tb_usuarios where 'a' = 'a
+
+- Nessa entrada de dados, o terceiro parâmetro da função bindValue() desempenha um papel crucial ao especificar o tipo de dados do valor associado ao marcador de posição. Ao configurá-lo para PDO::PARAM_INT, estamos indicando explicitamente que o valor vinculado é um inteiro. Isso não apenas facilita a conversão adequada do valor, mas também desempenha um papel crítico na segurança da consulta SQL.
+
+- Ao definir o tipo de dados como PDO::PARAM_INT, estamos instruindo o PDO a tratar o valor como um número inteiro, o que é particularmente relevante quando se trata de consultas que envolvem operações como exclusões (DELETE). Isso oferece uma camada adicional de segurança, impedindo a possibilidade de uma injeção de SQL mal-intencionada, onde um invasor poderia manipular a consulta para incluir instruções deletérias.
+
+- Dessa forma, ao utilizar o terceiro parâmetro para especificar o tipo de dados como PDO::PARAM_INT, estamos assegurando que o PDO interprete corretamente o valor como um inteiro, contribuindo para a integridade da consulta SQL e prevenindo possíveis ameaças de segurança associadas à injeção de SQL.
+
+        
