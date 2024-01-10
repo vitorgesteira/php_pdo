@@ -154,10 +154,10 @@ No php voce trata esse erro:
 
 ## Executando instruções SQL(Exec)
 
-- metodo **exec()**
+#### metodo **exec()**
 - **PDO::exec** — Executa uma instrução SQL e retorna o número de linhas afetadas
-- **PDO::exec()** retorna o número de linhas que foram modificadas ou excluídas pela instrução SQL que você emitiu. Se nenhuma linha for afetada, **PDO::exec()** retorna 0.
-- Instruções de **DDL** sempre retorna **0**, pois não esta modificando dados
+- **PDO::exec()** retorna o número de linhas que foram modificadas ou excluídas pela instrução SQL que você emitiu. Se nenhuma linha for afetada, **PDO::exec()** retorna `0`.
+- Instruções de **DDL** sempre retorna `0`, pois não esta modificando dados
 
 Primeiro precisamos montar a query que queremos executar:
 
@@ -196,13 +196,16 @@ ex:
                         $retorno = $conexao->exec($query);
                         echo $retorno;
 
-                        // $query = '
-                        //         insert into tb_usuarios(
-                        //             nome, email, senha 
-                        //         ) values (
-                        //             "Jorge Sant Ana", "jorge@teste.com.br", "123456"
-                        //         )
-                        // ';
+                        $query = '
+                                insert into tb_usuarios(
+                                nome, email, senha 
+                                ) values (
+                                "Jorge Sant Ana", "jorge@teste.com.br", "123456"
+                                )
+                        ';
+
+                        $retorno = $conexao->exec($query);
+                        echo $retorno;
 
                         $query = '
                                 delete from tb_usuarios
@@ -240,7 +243,7 @@ A variavel stmt apenas contem a declaração da consulta:
 
         PDOStatement Object ( [queryString] => select * from tb_usuarios )
 
-A partir da variavel **$stmt** podemo executar metodos para ter acesso aos dados recuperados do banco de dados
+A partir da variavel **$stmt** podemos executar metodos para ter acesso aos dados recuperados do banco de dados
 
 O metodo **fetchAll()** retorna todos os registros recuperados da consulta:
 
@@ -563,7 +566,7 @@ Nós podemos tranquilamente acessar os índices desejados. Da mesma forma que co
         
 * Utiliza um loop `foreach` para iterar sobre o array `$lista_usuario`, onde cada elemento é um array associativo representando um registro da tabela
 
-* `echo $value['nome'];` mprime o valor da coluna 'nome' para cada registro.
+* `echo $value['nome'];` imprime o valor da coluna 'nome' para cada registro.
 
 * `echo '<hr/>';` imprime uma linha horizontal para separar visualmente os resultados.
 
@@ -697,20 +700,20 @@ documentação: https://www.php.net/manual/en/pdo.constants.php
 
 - A sequência típica de uso do `PDO::prepare()` envolve os seguintes passos:
 
-1. **Criação da Consulta SQL com Marcadores de Posição:**
+**1. Criação da Consulta SQL com Marcadores de Posição:**
 
 - A consulta SQL é definida com marcadores de posição para os parâmetros. Esses marcadores de posição são representados por dois-pontos seguidos de um identificador único (por exemplo, `:usuario`, `:senha`).
 
         $query = "select * from tb_usuarios where email = :usuario AND senha = :senha ";
         
-2. **Preparação da Consulta:**
+**2. Preparação da Consulta:**
 
 - A consulta SQL é então passada para o método `PDO::prepare()`, que retorna um objeto `PDOStatement`. 
 - Este objeto representa a consulta preparada e contém informações sobre ela.
 
         $stmt = $conexao->prepare($query);
 
-3. Associação de Parâmetros:
+**3. Associação de Parâmetros:**
 
 - Em seguida, os valores dos parâmetros são associados aos marcadores de posição usando métodos como `bindParam()` ou `bindValue()` no objeto `PDOStatement`.
 
@@ -724,7 +727,7 @@ documentação: https://www.php.net/manual/en/pdo.constants.php
 - `bindParam()` permite a vinculação por referência, o que significa que o valor da variável é atualizado quando o parâmetro é executado. 
 - `bindValue()` passa o valor atual da variável.
 
-4. **Execução da Consulta:**
+**4. Execução da Consulta:**
 
 - Após a preparação e associação de parâmetros, a consulta preparada pode ser executada usando o método `execute()`.
 
@@ -753,7 +756,7 @@ Exemplo de uso da função `bindValue()` com o terceiro parâmetro:
 
          1234'; delete from tb_usuarios where 'a' = 'a
 
-- Nessa entrada de dados, o terceiro parâmetro da função bindValue() desempenha um papel crucial ao especificar o tipo de dados do valor associado ao marcador de posição. Ao configurá-lo para PDO::PARAM_INT, estamos indicando explicitamente que o valor vinculado é um inteiro. Isso não apenas facilita a conversão adequada do valor, mas também desempenha um papel crítico na segurança da consulta SQL.
+- Nessa entrada de dados, o terceiro parâmetro da função bindValue() desempenha um papel zcrucial ao especificar o tipo de dados do valor associado ao marcador de posição. Ao configurá-lo para PDO::PARAM_INT, estamos indicando explicitamente que o valor vinculado é um inteiro. Isso não apenas facilita a conversão adequada do valor, mas também desempenha um papel crítico na segurança da consulta SQL.
 
 - Ao definir o tipo de dados como PDO::PARAM_INT, estamos instruindo o PDO a tratar o valor como um número inteiro, o que é particularmente relevante quando se trata de consultas que envolvem operações como exclusões (DELETE). Isso oferece uma camada adicional de segurança, impedindo a possibilidade de uma injeção de SQL mal-intencionada, onde um invasor poderia manipular a consulta para incluir instruções deletérias.
 

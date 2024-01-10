@@ -41,10 +41,10 @@
         // $stmt = $conexao->query($query); //PDO Statement
         // print_r($stmt);
 
+        // $lista = $stmt->fetchAll();//retorno associativo e numérico
         // $lista = $stmt->fetchAll(PDO::FETCH_ASSOC); //retorno associativo
         // $lista = $stmt->fetchAll(PDO::FETCH_NUM); //retorno numérico 
         // $lista = $stmt->fetchAll(PDO::FETCH_BOTH); //retorno associativo e numérico 
-        // $lista = $stmt->fetchAll();//retorno associativo e numérico
         // $lista = $stmt->fetchAll(PDO::FETCH_OBJ); //retorna objetos
         
         // echo '<pre>';
